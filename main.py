@@ -70,9 +70,7 @@ def display_zipped_data(file):
 
     st.dataframe(summarized)
 
-    st.subheader('Insights')
-
-    st.caption('Cadence')
+    st.subheader('Cadence insights')
     if len(summarized[summarized['cadence'] >= 170].index) == len(summarized.index):
         st.text('Brilliant! You got top cadence, keep it up!')
         cadence_score = 1
@@ -88,7 +86,7 @@ def display_zipped_data(file):
         st.text('And go above 160 steps per minute')
         cadence_score = 3
 
-    st.caption('Stride Length')
+    st.subheader('Stride Insights')
     if cadence_score == 1:
         st.text('It is time to work on your stride')
         st.text('Try more interval training')
@@ -102,7 +100,7 @@ def display_zipped_data(file):
     else:
         st.text('Focus on your cadence')
         st.text('Keep decreasing your stride if needed')
-    st.caption('Resting Heart Rate')
+    st.subheader('Resting Heart Rate Insights')
     if len(summarized[summarized['R_HR'] <= 70].index) == len(summarized.index):
         st.text('You are in a great aerobic shape!')
         aerobic_score = 1
@@ -110,7 +108,7 @@ def display_zipped_data(file):
         st.text('Try increasing your monthly distance')
         st.text('This will improve your heart rate')
         aerobic_score = 2
-    st.caption('Vo2Max')
+    st.subheader('Vo2Max Insights')
     if aerobic_score == 1 and len(summarized[summarized['vo2max'] <= 50].index) > 0:
         st.text('To improve Vo2Max either')
         st.text('Improve your technique')
