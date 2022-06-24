@@ -78,21 +78,27 @@ def display_zipped_data(file):
         cadence_score = 1
     elif len(summarized[summarized['cadence'] >= 160].index) == len(summarized.index):
         st.text('Your cadence can and should be improved')
-        st.text('Try taking smaller steps or taking off your shoes')
+        st.text('Try taking smaller steps')
+        st.text('Or taking off your shoes')
         st.text('Strive to go above 170 steps per minute')
         cadence_score = 2
     else:
         st.text('Your cadence has significant room for improvement')
-        st.text('Try  taking smaller steps and go above 160 steps per minute')
+        st.text('Try taking smaller steps')
+        st.text('And go above 160 steps per minute')
         cadence_score = 3
 
     st.caption('Stride Length')
     if cadence_score == 1:
         st.text('It is time to work on your stride')
-        st.text('Try more interval training but do not go overboard!')
-        st.text('More than a few centimeters per month can cause injury!')
+        st.text('Try more interval training')
+        st.text('But do not go overboard!')
+        st.text('More than a few cm a month')
+        st.text('Can cause injury!')
     elif len(summarized[summarized['stride'] >= 100].index) == len(summarized.index):
-        st.text('Your stride is too long! First make sure you can perform at 170 and above cadence!')
+        st.text('Your stride is too long!')
+        st.text('First make sure you can perform at')
+        st.text('170 and above cadence!')
     else:
         st.text('Focus on your cadence')
         st.text('Keep decreasing your stride if needed')
@@ -109,7 +115,8 @@ def display_zipped_data(file):
         st.text('To improve Vo2Max you might have to improve the technique')
         st.text('Alternatively, reduce your weight, even if it is muscle')
     else:
-        st.text('With lower heart rate and better technique Vo2Max will increase')
+        st.text('With lower heart rate')
+        st.text('And better technique Vo2Max will increase')
 
 
 if __name__ == '__main__':
