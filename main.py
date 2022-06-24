@@ -77,13 +77,13 @@ def display_zipped_data(file):
         st.text('Brilliant! You got top cadence, keep it up!')
         cadence_score = 1
     elif len(summarized[summarized['cadence'] >= 160].index) == len(summarized.index):
-        st.text('Your cadence can and should be improved')
+        st.text('Your cadence can, be improved')
         st.text('Try taking smaller steps')
         st.text('Or taking off your shoes')
-        st.text('Strive to go above 170 steps per minute')
+        st.text('Strive to go above 170 steps')
         cadence_score = 2
     else:
-        st.text('Your cadence has significant room for improvement')
+        st.text('Your cadence can be improved alot')
         st.text('Try taking smaller steps')
         st.text('And go above 160 steps per minute')
         cadence_score = 3
@@ -104,20 +104,20 @@ def display_zipped_data(file):
         st.text('Keep decreasing your stride if needed')
     st.caption('Resting Heart Rate')
     if len(summarized[summarized['R_HR'] <= 70].index) == len(summarized.index):
-        st.text('You are in a great aerobic shape, keep it up!')
+        st.text('You are in a great aerobic shape!')
         aerobic_score = 1
     else:
         st.text('Try increasing your monthly distance')
-        st.text('This will decrease your resting heart rate')
+        st.text('This will improve your heart rate')
         aerobic_score = 2
     st.caption('Vo2Max')
     if aerobic_score == 1 and len(summarized[summarized['vo2max'] <= 50].index) > 0:
-        st.text('To improve Vo2Max you might require')
-        st.text('Technique improvements')
-        st.text('Alternatively, lower your weight')
+        st.text('To improve Vo2Max either')
+        st.text('Improve your technique')
+        st.text('Or, lower your weight')
     else:
-        st.text('With lower heart rate')
-        st.text('And better technique Vo2Max will increase')
+        st.text('Lower heart rate and better technique')
+        st.text('Will further increase Vo2Max ')
 
 
 if __name__ == '__main__':
