@@ -29,7 +29,7 @@ def display_zipped_data(file):
     running_metrics = MetricsBuilders.build_running_metrics(local_folder_path)
     merged_metrics = running_metrics.merge(user_metrics, on='date', how='left')
     metrics_to_display = \
-        ['date','restingHeartRate', 'vO2MaxValue', 'avgStrideLengthRolling', 'avgDoubleCadenceRolling']
+        ['date', 'restingHeartRate', 'vO2MaxValue', 'avgStrideLengthRolling', 'avgDoubleCadenceRolling']
     display_metrics = merged_metrics[metrics_to_display] \
         .rename(columns={'date': 'index',
                          'restingHeartRate' : 'R_HR',
@@ -55,7 +55,7 @@ def display_zipped_data(file):
         .set_index('month_year') \
         .sort_values(by='date')\
         [['monthly_average_distance', 'monthly_average_stride', 'monthly_average_cadence',
-          'monthly_average_vo2max','monthly_average_resting_heart_rate']].\
+          'monthly_average_vo2max', 'monthly_average_resting_heart_rate']].\
         fillna(0).astype(int)
 
     st.subheader('Monthly summarized stats')
@@ -77,7 +77,7 @@ def display_zipped_data(file):
                 'try to taking smaller steps and go above 160 steps per minute')
         cadence_score = 3
 
-    st.caption('2. Stride Length')
+    st.caption('Stride Length')
     if cadence_score == 1:
         st.text('It is time to work on your stride, '
                 'try more interval training but do not go overboard! '
@@ -86,18 +86,19 @@ def display_zipped_data(file):
         st.text('Your stride is too long! First make sure you can perform at 170 and above cadence!')
     else:
         st.text('Focus on your cadence, keep decreasing your stride if needed')
-    st.caption('3. Resting Heart Rate')
+    st.caption('Resting Heart Rate')
     if len(summarized[summarized['monthly_average_resting_heart_rate'] <= 70].index) == len(summarized.index):
         st.text('You are in a great aerobic shape, keep it up!')
         aerobic_score = 1
     else:
         st.text('Try increasing your monthly distance to help further improve your resting heart rate')
         aerobic_score = 2
-    st.caption('4. V02Max')
-    if aerobic_score==1 and  len(summarized[summarized['monthly_average_vo2max'] <= 50].index) >0:
+    st.caption('Vo2Max')
+    if aerobic_score == 1 and len(summarized[summarized['monthly_average_vo2max'] <= 50].index) > 0:
         st.text('To improve Vo2Max you might have to improve the technique or lower your weight even if it is muscle')
     else:
         st.text('With lower heart rate and better technique Vo2Max will increase')
+
 
 if __name__ == '__main__':
     run_website()
