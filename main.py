@@ -39,7 +39,7 @@ def display_zipped_data(file):
                          })\
         .set_index('index') \
         .dropna()
-    st.header('Cadence vs Stride and Vo2Max vs Resting heart rate trends')
+    st.subheader('Cadence vs Stride and Vo2Max vs Resting heart rate trends')
     st.line_chart(display_metrics)
 
     summarized = merged_metrics\
@@ -56,11 +56,11 @@ def display_zipped_data(file):
         .sort_values(by='date') \
         [['monthly_average_distance', 'monthly_average_stride', 'monthly_average_cadence','monthly_average_vo2max','monthly_average_resting_heart_rate']].fillna(0).astype(int)
 
-    st.header('Monthly summarized stats')
+    st.subheader('Monthly summarized stats')
 
     st.table(summarized)
 
-    st.header('Insights')
+    st.subheader('Insights')
 
     st.caption('1. Cadence')
     if len(summarized[summarized['monthly_average_cadence'] >= 170].index) == len(summarized.index):
