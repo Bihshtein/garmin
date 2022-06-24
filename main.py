@@ -112,8 +112,9 @@ def display_zipped_data(file):
         aerobic_score = 2
     st.caption('Vo2Max')
     if aerobic_score == 1 and len(summarized[summarized['vo2max'] <= 50].index) > 0:
-        st.text('To improve Vo2Max you might have to improve the technique')
-        st.text('Alternatively, reduce your weight, even if it is muscle')
+        st.text('To improve Vo2Max you might require')
+        st.text('Technique improvements')
+        st.text('Alternatively, lower your weight')
     else:
         st.text('With lower heart rate')
         st.text('And better technique Vo2Max will increase')
