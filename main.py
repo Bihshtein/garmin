@@ -53,8 +53,10 @@ def display_zipped_data(file):
             monthly_average_resting_heart_rate = lambda d: d.groupby(by=d.month_year)['restingHeartRate'].transform('mean')) \
             .drop_duplicates(subset=['month_year'])\
         .set_index('month_year') \
-        .sort_values(by='date') \
-        [['monthly_average_distance', 'monthly_average_stride', 'monthly_average_cadence','monthly_average_vo2max','monthly_average_resting_heart_rate']].fillna(0).astype(int)
+        .sort_values(by='date')\
+        [['monthly_average_distance', 'monthly_average_stride', 'monthly_average_cadence',
+          'monthly_average_vo2max','monthly_average_resting_heart_rate']].\
+        fillna(0).astype(int)
 
     st.subheader('Monthly summarized stats')
 
@@ -67,10 +69,12 @@ def display_zipped_data(file):
         st.text('Brilliant! You got top cadence, keep it up!')
         cadence_score = 1
     elif len(summarized[summarized['monthly_average_cadence'] >= 160].index) == len(summarized.index):
-        st.text('Your cadence can and should be improved, try taking smaller steps or taking off your shoes and go above 170 steps per minute')
+        st.text('Your cadence can and should be improved,'
+                ' try taking smaller steps or taking off your shoes and go above 170 steps per minute')
         cadence_score = 2
     else:
-        st.text('Your cadence has significant room for improvement, try to taking smaller steps and go above 160 steps per minute')
+        st.text('Your cadence has significant room for improvement, '
+                'try to taking smaller steps and go above 160 steps per minute')
         cadence_score = 3
 
     st.caption('2. Stride Length')
