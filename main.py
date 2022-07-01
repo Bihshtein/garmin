@@ -41,17 +41,17 @@ def display_zipped_data(file):
     heart_rate_level = HeartRateLevelEvaluator().get_level(metrics_manager.summarized_metrics)
     vo2max_level = Vo2MaxLevelEvaluator().get_level(metrics_manager.summarized_metrics)
 
-    st.subheader('Cadence insights')
+    st.subheader(f'Cadence insights, score  {cadence_level}')
     st.text(cadence_level_notes[cadence_level])
 
-    st.subheader('Stride Insights')
+    st.subheader(f'Stride Insights, score  {stride_level}')
     st.text(stride_level_notes[cadence_level][stride_level])
 
-    st.subheader('Resting Heart Rate Insights')
+    st.subheader(f'Resting Heart Rate Insights, score  {heart_rate_level}')
     st.text(heart_rate_level_notes[heart_rate_level])
 
-    st.subheader('Vo2Max Insights')
-    st.text(vo2max_level_notes[vo2max_level])
+    st.subheader(f'Vo2Max Insights, score  {vo2max_level}')
+    st.text(vo2max_level_notes[heart_rate_level][vo2max_level])
 
 
 if __name__ == '__main__':
