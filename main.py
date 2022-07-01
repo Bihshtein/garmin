@@ -1,9 +1,8 @@
 import streamlit as st
 import io
-import zipfile
-import os
-from metric_builders import MetricsBuilders
-
+from level_evaluator import *
+from notes import *
+from metrics_manager import MetricsManager
 st.set_page_config(layout="wide")
 
 
@@ -30,92 +29,29 @@ def run_website():
 
 
 def display_zipped_data(file):
-    local_folder_path = os.path.join(os.getcwd(), 'data')
-
-    with zipfile.ZipFile(file) as zip_ref:
-        zip_ref.extractall(local_folder_path)
-    user_metrics = MetricsBuilders.build_user_metrics(local_folder_path)
-    running_metrics = MetricsBuilders.build_running_metrics(local_folder_path)
-    merged_metrics = running_metrics.merge(user_metrics, on='date', how='left')
-    metrics_to_display = \
-        ['date', 'restingHeartRate', 'vO2MaxValue', 'avgStrideLengthRolling', 'avgDoubleCadenceRolling']
-    display_metrics = merged_metrics[metrics_to_display] \
-        .rename(columns={'date': 'index',
-                         'restingHeartRate' : 'R_HR',
-                         'vO2MaxValue' : 'V02Max',
-                         'avgStrideLengthRolling' : 'Stride',
-                         'avgDoubleCadenceRolling' : 'Cadence'
-                         })\
-        .set_index('index') \
-        .dropna()
     st.subheader('Cadence vs Stride and Vo2Max vs Resting heart rate trends')
-    st.line_chart(display_metrics)
-
-    summarized = merged_metrics\
-        .assign(
-            month_year=lambda d: d.date.astype('datetime64[ns]').dt.month.astype(str) + '-' +
-                                 d.date.astype('datetime64[ns]').dt.year.astype(str),
-            distance=lambda d: d.groupby(by=d.month_year)['distance'].transform('mean')/100/100,
-            stride=lambda d: d.groupby(by=d.month_year)['avgStrideLength'].transform('mean'),
-            cadence=lambda d: d.groupby(by=d.month_year)['avgDoubleCadence'].transform('mean'),
-            vo2max=lambda d: d.groupby(by=d.month_year)['vO2MaxValue'].transform('mean'),
-            R_HR=lambda d: d.groupby(by=d.month_year)['restingHeartRate'].transform('mean')) \
-            .drop_duplicates(subset=['month_year'])\
-        .set_index('month_year') \
-        .sort_values(by='date')\
-        [['distance', 'stride', 'cadence', 'vo2max', 'R_HR']].\
-        fillna(0).astype(int)
+    metrics_manager = MetricsManager(file)
+    st.line_chart(metrics_manager.display_metrics)
 
     st.subheader('Monthly summarized stats')
+    st.dataframe(metrics_manager.summarized_metrics)
 
-    st.dataframe(summarized)
+    cadence_level = CadenceLevelEvaluator().get_level(metrics_manager.summarized_metrics)
+    stride_level = StrideLevelEvaluator().get_level(metrics_manager.summarized_metrics)
+    heart_rate_level = HeartRateLevelEvaluator().get_level(metrics_manager.summarized_metrics)
+    vo2max_level = Vo2MaxLevelEvaluator().get_level(metrics_manager.summarized_metrics)
 
     st.subheader('Cadence insights')
-    if len(summarized[summarized['cadence'] >= 170].index) == len(summarized.index):
-        st.text('Brilliant! You got top cadence, keep it up!')
-        cadence_score = 1
-    elif len(summarized[summarized['cadence'] >= 160].index) == len(summarized.index):
-        st.text('Your cadence can, be improved')
-        st.text('Try taking smaller steps')
-        st.text('Or taking off your shoes')
-        st.text('Strive to go above 170 steps')
-        cadence_score = 2
-    else:
-        st.text('Your cadence can be improved alot')
-        st.text('Try taking smaller steps')
-        st.text('And go above 160 steps per minute')
-        cadence_score = 3
+    st.text(cadence_level_notes[cadence_level])
 
     st.subheader('Stride Insights')
-    if cadence_score == 1:
-        st.text('It is time to work on your stride')
-        st.text('Try more interval training')
-        st.text('But do not go overboard!')
-        st.text('More than a few cm a month')
-        st.text('Can cause injury!')
-    elif len(summarized[summarized['stride'] >= 100].index) == len(summarized.index):
-        st.text('Your stride is too long!')
-        st.text('First make sure you can perform at')
-        st.text('170 and above cadence!')
-    else:
-        st.text('Focus on your cadence')
-        st.text('Keep decreasing your stride if needed')
+    st.text(stride_level_notes[cadence_level][stride_level])
+
     st.subheader('Resting Heart Rate Insights')
-    if len(summarized[summarized['R_HR'] <= 70].index) == len(summarized.index):
-        st.text('You are in a great aerobic shape!')
-        aerobic_score = 1
-    else:
-        st.text('Try increasing your monthly distance')
-        st.text('This will improve your heart rate')
-        aerobic_score = 2
+    st.text(heart_rate_level_notes[heart_rate_level])
+
     st.subheader('Vo2Max Insights')
-    if aerobic_score == 1 and len(summarized[summarized['vo2max'] <= 50].index) > 0:
-        st.text('To improve Vo2Max either')
-        st.text('Improve your technique')
-        st.text('Or, lower your weight')
-    else:
-        st.text('Lower heart rate and better technique')
-        st.text('Will further increase Vo2Max ')
+    st.text(vo2max_level_notes[vo2max_level])
 
 
 if __name__ == '__main__':
