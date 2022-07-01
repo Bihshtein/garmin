@@ -25,10 +25,9 @@ class MetricsBuilders:
         dfs = [pd.DataFrame.from_records(json.load(open(file))[0]['summarizedActivitiesExport']) for file in files]
         shutil.rmtree(local_folder_path)
 
-        df = pd.concat(dfs)\
+        return pd.concat(dfs)\
             .query("name == 'Running' & avgDoubleCadence > 145")\
             .assign(avgStrideLengthRolling=lambda d: d['avgStrideLength'].rolling(1).mean(),
                     avgDoubleCadenceRolling=lambda d: d['avgDoubleCadence'].rolling(1).mean(),
                     date=lambda d: pd.to_datetime(d['beginTimestamp'], unit='ms').dt.date)
 
-        return df

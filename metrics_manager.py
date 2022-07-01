@@ -40,7 +40,7 @@ class MetricsManager:
             .assign(
                 month_year=lambda d: d.date.astype('datetime64[ns]').dt.month.astype(str) + '-' +
                                      d.date.astype('datetime64[ns]').dt.year.astype(str),
-                distance=lambda d: d.groupby(by=d.month_year)['distance'].transform('mean')/100/100,
+                distance=lambda d: d.groupby(by=d.month_year)['distance'].transform('sum')/100/1000,
                 stride=lambda d: d.groupby(by=d.month_year)['avgStrideLength'].transform('mean'),
                 cadence=lambda d: d.groupby(by=d.month_year)['avgDoubleCadence'].transform('mean'),
                 vo2max=lambda d: d.groupby(by=d.month_year)['vO2MaxValue'].transform('mean'),
